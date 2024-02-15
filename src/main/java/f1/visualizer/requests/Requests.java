@@ -9,6 +9,7 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,8 +21,7 @@ public class Requests {
 
         try {
             // Specify the URL with parameters
-            String apiUrl = "https://api.openf1.org/v1/location?session_key=7953&driver_number=1&date>2023-03-05T15:00:00&date<2023-03-05T15:05:00";
-
+            String apiUrl = "http://localhost:8000/location?session_key=7953&driver_number=1&date%3E2023-03-05T15:00:00&date%3C2023-03-05T15:05:00";
 
             // Create a URL object
             URL url = new URL(apiUrl);
@@ -64,7 +64,7 @@ public class Requests {
         if (positions.isEmpty()){
             System.out.println("Positions is empty");
             return null;
-        }else{
+        } else {
             return positions;
         }
     }
