@@ -1,10 +1,12 @@
 package f1.visualizer.view;
 
 import f1.visualizer.wrappers.Position;
+import lombok.Data;
 
 import javax.swing.*;
 import java.awt.*;
 import java.util.List;
+@Data
 
 public class MainFrame extends JFrame {
     private JButton rotatePlus;
@@ -45,88 +47,5 @@ public class MainFrame extends JFrame {
         // Add the button panel to the frame
         getContentPane().add(buttonPanel, BorderLayout.SOUTH);
 
-    }
-
-
-
-    public JButton getRotatePlus() {
-        return rotatePlus;
-    }
-
-    public void setRotatePlus(JButton rotatePlus) {
-        this.rotatePlus = rotatePlus;
-    }
-
-    public JButton getRotateMinus() {
-        return rotateMinus;
-    }
-
-    public void setRotateMinus(JButton rotateMinus) {
-        this.rotateMinus = rotateMinus;
-    }
-
-
-    public DrawingPanel getDrawingPanel() {
-        return drawingPanel;
-    }
-
-    public void setDrawingPanel(DrawingPanel drawingPanel) {
-        this.drawingPanel = drawingPanel;
-    }
-
-    public JButton getIncreaseScaleButton() {
-        return increaseScaleButton;
-    }
-
-    public void setIncreaseScaleButton(JButton increaseScaleButton) {
-        this.increaseScaleButton = increaseScaleButton;
-    }
-
-    public JButton getDecreaseScaleButton() {
-        return decreaseScaleButton;
-    }
-
-    public void setDecreaseScaleButton(JButton decreaseScaleButton) {
-        this.decreaseScaleButton = decreaseScaleButton;
-    }
-
-    public JButton getPushXOffsetButton() {
-        return pushXOffsetButton;
-    }
-
-    public void setPushXOffsetButton(JButton pushXOffsetButton) {
-        this.pushXOffsetButton = pushXOffsetButton;
-    }
-
-    public JButton getPushYOffsetButton() {
-        return pushYOffsetButton;
-    }
-
-    public void setPushYOffsetButton(JButton pushYOffsetButton) {
-        this.pushYOffsetButton = pushYOffsetButton;
-    }
-
-    public JButton getPullXOffsetButton() {
-        return pullXOffsetButton;
-    }
-
-    public void setPullXOffsetButton(JButton pullXOffsetButton) {
-        this.pullXOffsetButton = pullXOffsetButton;
-    }
-
-    public JButton getPullYOffsetButton() {
-        return pullYOffsetButton;
-    }
-
-    public void setPullYOffsetButton(JButton pullYOffsetButton) {
-        this.pullYOffsetButton = pullYOffsetButton;
-    }
-
-    public JButton getDebug() {
-        return debug;
-    }
-
-    public void setDebug(JButton debug) {
-        this.debug = debug;
     }
 }
