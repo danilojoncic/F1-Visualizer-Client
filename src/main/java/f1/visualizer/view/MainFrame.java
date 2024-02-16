@@ -22,7 +22,7 @@ public class MainFrame extends JFrame {
 
     public MainFrame() {
         setTitle("F1 Visualizer 0.0.3");
-        setSize(1920, 1080);
+        setSize(Toolkit.getDefaultToolkit().getScreenSize());
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
 
