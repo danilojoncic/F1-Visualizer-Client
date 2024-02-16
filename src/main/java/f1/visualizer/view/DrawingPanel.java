@@ -9,44 +9,45 @@ import java.awt.geom.Line2D;
 import java.util.List;
 
 public class DrawingPanel extends JPanel {
-    private List<Position> positions = DataFetcher.fetchDriverLocation(81);
+    private List<Position> positions;
     private int xOffset;
     private int yOffset;
     private Point screenCenter = new Point();
-    private Point raceTrackCenter;
     private int scaleFactor = 8;
+    private boolean initialized = false; // Flag to check if initialization is done
 
     public DrawingPanel() {
-        applyScaleFactor();
-        applyOffset();
+        positions = DataFetcher.fetchDriverLocation(81);
     }
 
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
+        if (!initialized) {
+            // Initialize screen center here, after the component has been sized
+            screenCenter.x = getWidth() / 2;
+            screenCenter.y = getHeight() / 2;
+            setUpValues();
+            initialized = true; // Mark initialization as done
+        }
         paintGrid(g);
         paintCircuit(g);
     }
 
-    private void applyScaleFactor() {
+    private void setUpValues() {
+        int totalX = 0;
+        int totalY = 0;
         for (Position position : positions) {
             position.setX(position.getX() / scaleFactor);
             position.setY(position.getY() / scaleFactor);
+            totalX += position.getX();
+            totalY += position.getY();
         }
-    }
+        int raceTrackCenterX = totalX / positions.size();
+        int raceTrackCenterY = totalY / positions.size();
+        xOffset = screenCenter.x - raceTrackCenterX;
+        yOffset = screenCenter.y - raceTrackCenterY;
 
-    private void applyOffset() {
-        int xTotal = 0;
-        int yTotal = 0;
-        for (Position p : positions) {
-            xTotal += p.getX();
-            yTotal += p.getY();
-        }
-        raceTrackCenter = new Point(xTotal / positions.size(), yTotal / positions.size());
-        Dimension panelSize = getSize();
-        screenCenter = new Point(panelSize.width / 2, panelSize.height / 2);
-        xOffset = screenCenter.x - raceTrackCenter.x;
-        yOffset = screenCenter.y - raceTrackCenter.y;
         for (Position position : positions) {
             position.setX(position.getX() + xOffset);
             position.setY(position.getY() + yOffset);
@@ -85,18 +86,5 @@ public class DrawingPanel extends JPanel {
             int y = startY + i * 50;
             g2d.draw(new Line2D.Double(0, y, panelWidth, y));
         }
-    }
-
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            JFrame frame = new JFrame("Drawing Panel");
-            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-            frame.setSize(600, 400);
-
-            DrawingPanel drawingPanel = new DrawingPanel();
-            frame.add(drawingPanel);
-
-            frame.setVisible(true);
-        });
     }
 }
