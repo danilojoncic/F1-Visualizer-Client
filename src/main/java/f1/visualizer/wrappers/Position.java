@@ -7,12 +7,26 @@ import java.util.Date;
 
 @Data
 public class Position {
-    private int x;
-    private int session_key;
-    private int meeting_key;
-    private int driver_number;
-    private int y;
-    private Date date;
-    private int lap;
-    private int z;
+    private double x;
+    private double y;
+
+
+
+
+
+
+    /*
+    45.1234567
+    45
+    451234567
+    450000000
+    ->1234567
+     */
+    public static int giveInInt(double db){
+        double decimalPart = (db * 1000000) - ((int) db) * 1000000;
+        return (int) decimalPart;
+    }
 }
+
+
+

@@ -1,23 +1,29 @@
 package f1.visualizer.view;
 
-import f1.visualizer.controller.DataFetcher;
+import f1.visualizer.controller.CoordinateReader;
 import f1.visualizer.wrappers.Position;
+import lombok.Data;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.geom.AffineTransform;
+import java.awt.geom.GeneralPath;
 import java.awt.geom.Line2D;
+import java.io.IOException;
 import java.util.List;
 
+@Data
 public class DrawingPanel extends JPanel {
     private List<Position> positions;
-    private int xOffset;
-    private int yOffset;
+    private int xOffset = 0;
+    private int yOffset = 0;
+    private double rotationAngle = 0;
     private Point screenCenter = new Point();
-    private int scaleFactor = 8;
+    private double scaleFactor; // Adjusted scaleFactor
     private boolean initialized = false; // Flag to check if initialization is done
 
     public DrawingPanel() {
-        positions = DataFetcher.fetchDriverLocation(81);
+
     }
 
     @Override
@@ -27,61 +33,78 @@ public class DrawingPanel extends JPanel {
             // Initialize screen center here, after the component has been sized
             screenCenter.x = getWidth() / 2;
             screenCenter.y = getHeight() / 2;
-            setUpValues();
             initialized = true; // Mark initialization as done
+            try {
+                positions = CoordinateReader.readCoordinatesFromFile("C:\\Users\\jonci\\Desktop\\front\\F1 Visualizer Client\\src\\main\\java\\f1\\visualizer\\race_tracks\\sg-2008.json");
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+            scaleFactor = calculateScaleFactor(); // Calculate scaleFactor
         }
         paintGrid(g);
         paintCircuit(g);
     }
 
-    private void setUpValues() {
-        int totalX = 0;
-        int totalY = 0;
+    private double calculateScaleFactor() {
+        // Calculate the scale factor based on the panel size and the range of coordinates
+        double maxX = Double.MIN_VALUE;
+        double maxY = Double.MIN_VALUE;
         for (Position position : positions) {
-            position.setX(position.getX() / scaleFactor);
-            position.setY(position.getY() / scaleFactor);
-            totalX += position.getX();
-            totalY += position.getY();
+            maxX = Math.max(maxX, position.getX());
+            maxY = Math.max(maxY, position.getY());
         }
-        int raceTrackCenterX = totalX / positions.size();
-        int raceTrackCenterY = totalY / positions.size();
-        xOffset = screenCenter.x - raceTrackCenterX;
-        yOffset = screenCenter.y - raceTrackCenterY;
+        double maxDimension = Math.max(maxX, maxY);
+        return Math.min(getWidth(), getHeight()) / maxDimension;
+    }
 
-        for (Position position : positions) {
-            position.setX(position.getX() + xOffset);
-            position.setY(position.getY() + yOffset);
+    private Shape createCircuitShape() {
+        GeneralPath path = new GeneralPath();
+        Position firstPosition = positions.get(0);
+        path.moveTo(scaleCoordinate(firstPosition.getX()), scaleCoordinate(firstPosition.getY()));
+        for (int i = 1; i < positions.size(); i++) {
+            Position position = positions.get(i);
+            path.lineTo(scaleCoordinate(position.getX()), scaleCoordinate(position.getY()));
         }
+        path.closePath();
+        return path;
+    }
+
+    private double scaleCoordinate(double coordinate) {
+        return coordinate * scaleFactor;
     }
 
     private void paintCircuit(Graphics graphics) {
         Graphics2D g2d = (Graphics2D) graphics;
         g2d.setColor(Color.BLUE);
-        for (int i = 0; i < positions.size() - 1; i++) {
-            Position p1 = positions.get(i);
-            Position p2 = positions.get(i + 1);
-            g2d.drawLine(p1.getX(), p1.getY(), p2.getX(), p2.getY());
-        }
+        Shape circuitShape = createCircuitShape();
+
+        // Create a transformation to rotate the shape around the screen center
+        AffineTransform transform = new AffineTransform();
+        transform.rotate(rotationAngle, screenCenter.x, screenCenter.y); // Rotate around the screen center
+
+        // Apply the transformation
+        Shape transformedShape = transform.createTransformedShape(circuitShape);
+
+        // Debugging statements
+        System.out.println("Transformed shape bounds: " + transformedShape.getBounds());
+
+        // Draw the transformed shape
+        g2d.fill(transformedShape);
     }
 
     private void paintGrid(Graphics graphics) {
         Graphics2D g2d = (Graphics2D) graphics;
         g2d.setColor(Color.LIGHT_GRAY);
-
         int panelWidth = getWidth();
         int panelHeight = getHeight();
-
         int numLinesX = panelWidth / 50 + 1;
         int numLinesY = panelHeight / 50 + 1;
-
         int startX = (panelWidth % 50) / 2;
         int startY = (panelHeight % 50) / 2;
-
         for (int i = 0; i < numLinesX; i++) {
             int x = startX + i * 50;
             g2d.draw(new Line2D.Double(x, 0, x, panelHeight));
         }
-
         for (int i = 0; i < numLinesY; i++) {
             int y = startY + i * 50;
             g2d.draw(new Line2D.Double(0, y, panelWidth, y));

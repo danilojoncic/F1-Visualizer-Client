@@ -1,5 +1,6 @@
 package f1.visualizer.view;
 
+import f1.visualizer.controller.ControllManager;
 import f1.visualizer.wrappers.Position;
 import lombok.Data;
 
@@ -7,7 +8,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.List;
 @Data
-
 public class MainFrame extends JFrame {
     private JButton rotatePlus;
     private JButton rotateMinus;
@@ -19,6 +19,7 @@ public class MainFrame extends JFrame {
     JButton pullXOffsetButton = new JButton("X -");
     JButton pullYOffsetButton = new JButton("Y -");
     JButton debug = new JButton("Debug");
+    ControllManager controllManager;
 
     public MainFrame() {
         setTitle("F1 Visualizer 0.0.3");
@@ -46,6 +47,6 @@ public class MainFrame extends JFrame {
 
         // Add the button panel to the frame
         getContentPane().add(buttonPanel, BorderLayout.SOUTH);
-
+        controllManager = new ControllManager(this);
     }
 }
