@@ -17,43 +17,36 @@ public class PlacementController {
         mainFrame.getPullXOffsetButton().addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                mainFrame.getDrawingPanel().setXOffset(mainFrame.getDrawingPanel().getXOffset()-50);
+                mainFrame.getDrawingPanel().pullX();
                 mainFrame.repaint();
                 mainFrame.revalidate();
-                System.out.println("X offset -");
-
             }
         });
 
         mainFrame.getPullYOffsetButton().addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                mainFrame.getDrawingPanel().setYOffset(mainFrame.getDrawingPanel().getYOffset()-50);
+                mainFrame.getDrawingPanel().pullY();
                 mainFrame.repaint();
                 mainFrame.revalidate();
-                System.out.println("Y offset -");
-
             }
         });
 
         mainFrame.getPushXOffsetButton().addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                mainFrame.getDrawingPanel().setXOffset(mainFrame.getDrawingPanel().getXOffset()+50);
+                mainFrame.getDrawingPanel().pushX();
                 mainFrame.repaint();
                 mainFrame.revalidate();
-                System.out.println("X offset +");
             }
         });
 
         mainFrame.getPushYOffsetButton().addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                mainFrame.getDrawingPanel().setYOffset(mainFrame.getDrawingPanel().getYOffset()+50);
+                mainFrame.getDrawingPanel().pushY();
                 mainFrame.repaint();
                 mainFrame.revalidate();
-                System.out.println("Y offset +");
-
             }
         });
 

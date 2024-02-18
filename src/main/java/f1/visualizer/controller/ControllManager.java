@@ -6,17 +6,19 @@ public class ControllManager {
     MainFrame mainFrame;
 
     ScaleController scaleController;
-    PlacementController placementController;
-    RotationController rotationController;
+  PlacementController placementController;
+    //RotationController rotationController;
+    DebugController debugController;
     public ControllManager(MainFrame mainFrame) {
         this.mainFrame = mainFrame;
         attachController();
     }
 
     private void attachController(){
+        debugController = new DebugController(mainFrame);
         placementController = new PlacementController(mainFrame);
         scaleController = new ScaleController(mainFrame);
-        rotationController = new RotationController(mainFrame);
+        //rotationController = new RotationController(mainFrame);
     }
 
 }

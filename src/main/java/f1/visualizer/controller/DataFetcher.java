@@ -3,6 +3,7 @@ package f1.visualizer.controller;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import f1.visualizer.wrappers.DriverPosition;
 import f1.visualizer.wrappers.Position;
 
 import java.io.BufferedReader;
@@ -13,8 +14,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DataFetcher {
-    public static List<Position> fetchDriverLocation(int driver_number){
-        List<Position> positions = new ArrayList<>();
+    public static List<DriverPosition> fetchDriverLocation(int driver_number){
+        List<DriverPosition> positions = new ArrayList<>();
 
         try {
             String apiUrl = "https://api.openf1.org/v1/location?session_key=9161&driver_number=" + driver_number + "&date>2023-09-16T13:03:35.200&date<2023-09-16T13:08:35.800";
@@ -33,7 +34,7 @@ public class DataFetcher {
             reader.close();
             ObjectMapper objectMapper = new ObjectMapper();
             JsonNode jsonNode = objectMapper.readTree(response.toString());
-            List<Position> positionList = objectMapper.readValue(response.toString(), new TypeReference<List<Position>>() {});
+            List<DriverPosition> positionList = objectMapper.readValue(response.toString(), new TypeReference<List<DriverPosition>>() {});
             positions.addAll(positionList);
             connection.disconnect();
         } catch (Exception e) {

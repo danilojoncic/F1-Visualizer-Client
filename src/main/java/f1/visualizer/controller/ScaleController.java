@@ -17,7 +17,7 @@ public class ScaleController {
         mainFrame.getIncreaseScaleButton().addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                mainFrame.getDrawingPanel().setScaleFactor(mainFrame.getDrawingPanel().getScaleFactor()*2);
+                mainFrame.getDrawingPanel().setScale(mainFrame.getDrawingPanel().getScale()+10);
                 mainFrame.repaint();
                 mainFrame.revalidate();
                 System.out.println("Scale +");
@@ -27,7 +27,7 @@ public class ScaleController {
         mainFrame.getDecreaseScaleButton().addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                mainFrame.getDrawingPanel().setScaleFactor(mainFrame.getDrawingPanel().getScaleFactor()/2);
+                mainFrame.getDrawingPanel().setScale(mainFrame.getDrawingPanel().getScale()-10);
                 mainFrame.repaint();
                 mainFrame.revalidate();
                 System.out.println("Scale -");
