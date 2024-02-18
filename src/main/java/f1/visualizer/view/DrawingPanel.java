@@ -8,6 +8,8 @@ import lombok.Data;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Area;
 import java.awt.geom.GeneralPath;
@@ -24,8 +26,9 @@ public class DrawingPanel extends JPanel {
     private boolean debug = true;
     private List<DriverPosition> oneDriversPositions = DataFetcher.fetchDriverLocation(81);
     private int scale = 1;
-    private int currentFrame = 0;
-    private final int totalFrames = 100; // Total number of frames for the animation
+    private int currentIndex = 0;
+    private int delay = 100; // Delay in milliseconds between each frame
+    private Timer timer; // Total number of frames for the animation
     private DriverPosition startDriverPosition; // Initial position of the driver for animation
     private DriverPosition endDriverPosition; // Final position of the driver for animation
 
@@ -112,6 +115,7 @@ public class DrawingPanel extends JPanel {
         if(debug){
             paintGrid(g);
         }
+        paintAnimation(g);
     }
 
     private void initialize() {
@@ -194,7 +198,7 @@ public class DrawingPanel extends JPanel {
         g2d.setColor(Color.GREEN);
             // Animation finished or not started, draw the driver at its final position
             for (DriverPosition position : oneDriversPositions) {
-                if (oneDriversPositions.indexOf(position) % 10 == 0) {
+                if (true) {
                     g2d.setStroke(new BasicStroke(5));
                     g2d.drawOval(position.getX()-5, position.getY()-5, 5, 5);
                 }
@@ -209,11 +213,38 @@ public class DrawingPanel extends JPanel {
         g2d.drawOval(totalx/oneDriversPositions.size(),totaly/oneDriversPositions.size(),5,5);
     }
 
-    // Method to start the animation
-    // Method to start the animation
+    private void paintAnimation(Graphics g) {
+        Graphics2D g2d = (Graphics2D) g;
+        g2d.setColor(Color.blue);
+        if (currentIndex < oneDriversPositions.size() - 1) {
+            DriverPosition start = oneDriversPositions.get(currentIndex);
+            DriverPosition end = oneDriversPositions.get(currentIndex + 5);
+            int currentX = (int) (start.getX() + (end.getX() - start.getX()) * currentIndex / delay);
+            int currentY = (int) (start.getY() + (end.getY() - start.getY()) * currentIndex / delay);
+            g2d.setStroke(new BasicStroke(10));
+            g2d.drawOval(currentX - 5, currentY - 5, 10, 10);
+            currentIndex++;
+        } else {
+            stopAnimation();
+        }
+    }
 
+    public void startAnimation() {
+        ActionListener taskPerformer = new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                repaint();
+                currentIndex++;
+            }
+        };
+        timer = new Timer(delay, taskPerformer);
+        timer.start();
+    }
 
-
-
+    public void stopAnimation() {
+        if (timer != null && timer.isRunning()) {
+            timer.stop();
+        }
+    }
 }
 
