@@ -82,7 +82,7 @@ public class DrawingPanel extends JPanel {
 
         double scaleX = circuitBounds.getWidth() / driversBounds.getWidth();
         double scaleY = circuitBounds.getHeight() / driversBounds.getHeight();
-        double scaleFactor = Math.min(scaleX, scaleY);
+        scaleFactor = Math.min(scaleX, scaleY);
         for (DriverArbitraryPosition position : oneDriversPositions) {
             double scaledX = circuitBounds.getX() + (position.getX() - driversBounds.getX()) * scaleFactor;
             double scaledY = circuitBounds.getY() + (position.getY() - driversBounds.getY()) * scaleFactor;
@@ -241,8 +241,9 @@ public class DrawingPanel extends JPanel {
             Date startDate = stringToDate(start.getDate());
             Date endDate = stringToDate(end.getDate());
 
-            long timeDifference = endDate.getTime() - startDate.getTime(); // Calculate time difference in milliseconds
-            delay = (int)timeDifference;
+            long timeDifference = endDate.getTime() - startDate.getTime();
+            //need to scale time somehow, i need Dr Manns Planet
+            delay = (int)((double)timeDifference*scaleFactor);
             int currentX = (int) (start.getX() + (end.getX() - start.getX()) * currentIndex / delay);
             int currentY = (int) (start.getY() + (end.getY() - start.getY()) * currentIndex / delay);
 
