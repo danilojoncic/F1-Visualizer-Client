@@ -19,6 +19,8 @@ public class MainFrame extends JFrame {
     JButton pullXOffsetButton = new JButton("X -");
     JButton pullYOffsetButton = new JButton("Y -");
     JButton debug = new JButton("Debug");
+    JButton startButton = new JButton("Play");
+    JButton pauseButton = new JButton("Pause");
     ControllManager controllManager;
 
     public MainFrame() {
@@ -34,7 +36,7 @@ public class MainFrame extends JFrame {
 
         getContentPane().add(drawingPanel);
 
-        JPanel buttonPanel = new JPanel(new GridLayout(3, 3));
+        JPanel buttonPanel = new JPanel(new GridLayout(4, 4));
         buttonPanel.add(increaseScaleButton);
         buttonPanel.add(pushYOffsetButton);
         buttonPanel.add(pushXOffsetButton);
@@ -44,6 +46,8 @@ public class MainFrame extends JFrame {
         buttonPanel.add(rotatePlus);
         buttonPanel.add(rotateMinus);
         buttonPanel.add(debug);
+        buttonPanel.add(startButton);
+        buttonPanel.add(pauseButton);
 
         // Add the button panel to the frame
         getContentPane().add(buttonPanel, BorderLayout.SOUTH);

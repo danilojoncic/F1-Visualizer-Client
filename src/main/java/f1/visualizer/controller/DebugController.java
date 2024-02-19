@@ -18,7 +18,8 @@ public class DebugController {
             @Override
             public void actionPerformed(ActionEvent e) {
                 mainFrame.getDrawingPanel().setDebug(!mainFrame.getDrawingPanel().isDebug());
-                mainFrame.getDrawingPanel().startAnimation();
+                mainFrame.repaint();
+                mainFrame.revalidate();
             }
         });
     }

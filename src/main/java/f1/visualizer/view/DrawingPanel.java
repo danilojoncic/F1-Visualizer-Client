@@ -10,10 +10,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.geom.AffineTransform;
-import java.awt.geom.Area;
-import java.awt.geom.GeneralPath;
-import java.awt.geom.Line2D;
+import java.awt.geom.*;
 import java.io.IOException;
 import java.util.List;
 
@@ -27,7 +24,7 @@ public class DrawingPanel extends JPanel {
     private List<DriverPosition> oneDriversPositions = DataFetcher.fetchDriverLocation(81);
     private int scale = 1;
     private int currentIndex = 0;
-    private int delay = 100; // Delay in milliseconds between each frame
+    private int delay = 16; // Delay in milliseconds between each frame
     private Timer timer; // Total number of frames for the animation
     private DriverPosition startDriverPosition; // Initial position of the driver for animation
     private DriverPosition endDriverPosition; // Final position of the driver for animation
@@ -75,14 +72,40 @@ public class DrawingPanel extends JPanel {
     }
 
 
-    private void setUpDriverPos() {
-        // Step 1: Scale all driver positions by a factor of 10
+
+    private void scaleDriverPositions() {
+        Rectangle2D circuitBounds = circuitShape.getBounds2D();
+        Rectangle2D driversBounds = getDriversBoundingBox();
+
+        double scaleX = circuitBounds.getWidth() / driversBounds.getWidth();
+        double scaleY = circuitBounds.getHeight() / driversBounds.getHeight();
+        double scaleFactor = Math.min(scaleX, scaleY);
         for (DriverPosition position : oneDriversPositions) {
-            position.setX((int)(((float)position.getX()) / 12.5));
-            position.setY((int)(((float)position.getY()) / 11.89));
+            double scaledX = circuitBounds.getX() + (position.getX() - driversBounds.getX()) * scaleFactor;
+            double scaledY = circuitBounds.getY() + (position.getY() - driversBounds.getY()) * scaleFactor;
+            position.setX((int) scaledX);
+            position.setY((int) scaledY);
+        }
+    }
+
+    private Rectangle2D getDriversBoundingBox() {
+        double minX = Double.MAX_VALUE;
+        double minY = Double.MAX_VALUE;
+        double maxX = Double.MIN_VALUE;
+        double maxY = Double.MIN_VALUE;
+
+        for (DriverPosition position : oneDriversPositions) {
+            minX = Math.min(minX, position.getX());
+            minY = Math.min(minY, position.getY());
+            maxX = Math.max(maxX, position.getX());
+            maxY = Math.max(maxY, position.getY());
         }
 
-        // Step 2: Calculate the center point of all scaled driver positions
+        return new Rectangle2D.Double(minX, minY, maxX - minX, maxY - minY);
+    }
+
+    private void setUpDriverPos() {
+        scaleDriverPositions();
         int totalX = 0;
         int totalY = 0;
         for (DriverPosition position : oneDriversPositions) {
@@ -91,13 +114,8 @@ public class DrawingPanel extends JPanel {
         }
         int centerX = totalX / oneDriversPositions.size();
         int centerY = totalY / oneDriversPositions.size();
-
-        // Print the cumulative center of the drivers' positions
-        // Step 3: Calculate the offset needed to center the driver positions relative to the screen center
         int offsetX = (int) screenCenter.getX() - centerX;
         int offsetY = (int) screenCenter.getY() - centerY;
-
-        // Step 4: Apply the offset to each driver position
         for (DriverPosition position : oneDriversPositions) {
             position.setX(position.getX() + offsetX+25);
             position.setY(position.getY() + offsetY+30);
@@ -128,8 +146,6 @@ public class DrawingPanel extends JPanel {
         setBackground(Color.WHITE);
         setUpDriverPos();
     }
-
-
     private void transformCircuit(){
         Rectangle bounds = circuitShape.getBounds();
         double scaleX = (double) getWidth() / bounds.getWidth();
@@ -196,13 +212,12 @@ public class DrawingPanel extends JPanel {
     private void paintDriver(Graphics g) {
         Graphics2D g2d = (Graphics2D) g;
         g2d.setColor(Color.GREEN);
-            // Animation finished or not started, draw the driver at its final position
-            for (DriverPosition position : oneDriversPositions) {
-                if (true) {
-                    g2d.setStroke(new BasicStroke(5));
-                    g2d.drawOval(position.getX()-5, position.getY()-5, 5, 5);
-                }
+        for (DriverPosition position : oneDriversPositions) {
+            if (oneDriversPositions.indexOf(position) % 25 == 0) {
+                g2d.setStroke(new BasicStroke(5));
+                g2d.drawOval(position.getX()-5, position.getY()-5, 5, 5);
             }
+        }
         int totalx = 0;
         int totaly = 0;
         for (DriverPosition position : oneDriversPositions) {
@@ -210,7 +225,7 @@ public class DrawingPanel extends JPanel {
             totaly+=position.getY();
         }
         g2d.setColor(Color.RED);
-        g2d.drawOval(totalx/oneDriversPositions.size(),totaly/oneDriversPositions.size(),5,5);
+        g2d.drawOval(totalx/oneDriversPositions.size()-5,totaly/oneDriversPositions.size()-5,5,5);
     }
 
     private void paintAnimation(Graphics g) {
