@@ -1,13 +1,12 @@
 package f1.visualizer.view;
 
 import f1.visualizer.controller.CoordinateReader;
-import f1.visualizer.controller.DataFetcher;
+import f1.visualizer.utils.DataFetcher;
 import f1.visualizer.wrappers.DriverArbitraryPosition;
 import f1.visualizer.wrappers.GPSCircuitPosition;
 import lombok.Data;
 
 import javax.swing.*;
-import javax.swing.text.DateFormatter;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -38,7 +37,7 @@ public class DrawingPanel extends JPanel {
     public DrawingPanel() {
         // Load positions from file
         try {
-            GPSCircuitPositions = CoordinateReader.readCoordinatesFromFile("C:\\Users\\jonci\\Desktop\\front\\F1 Visualizer Client\\src\\main\\java\\f1\\visualizer\\race_tracks\\sg-2008.json");
+            GPSCircuitPositions = CoordinateReader.readCoordinatesFromFile("C:\\Users\\jonci\\Desktop\\front\\F1 Visualizer Client\\src\\main\\java\\f1\\visualizer\\race_tracks\\singapore.json");
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -243,7 +242,7 @@ public class DrawingPanel extends JPanel {
 
             long timeDifference = endDate.getTime() - startDate.getTime();
             //need to scale time somehow, i need Dr Manns Planet
-            delay = (int)((double)timeDifference*scaleFactor);
+            delay = (int)timeDifference;
             int currentX = (int) (start.getX() + (end.getX() - start.getX()) * currentIndex / delay);
             int currentY = (int) (start.getY() + (end.getY() - start.getY()) * currentIndex / delay);
 

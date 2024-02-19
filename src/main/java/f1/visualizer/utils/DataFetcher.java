@@ -1,4 +1,4 @@
-package f1.visualizer.controller;
+package f1.visualizer.utils;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
