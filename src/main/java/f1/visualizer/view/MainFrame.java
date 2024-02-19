@@ -1,12 +1,11 @@
 package f1.visualizer.view;
 
 import f1.visualizer.controller.ControllManager;
-import f1.visualizer.wrappers.Position;
 import lombok.Data;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.List;
+
 @Data
 public class MainFrame extends JFrame {
     private JButton rotatePlus;

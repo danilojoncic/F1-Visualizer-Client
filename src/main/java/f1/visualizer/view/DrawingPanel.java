@@ -2,32 +2,35 @@ package f1.visualizer.view;
 
 import f1.visualizer.controller.CoordinateReader;
 import f1.visualizer.controller.DataFetcher;
-import f1.visualizer.wrappers.DriverPosition;
-import f1.visualizer.wrappers.Position;
+import f1.visualizer.wrappers.DriverArbitraryPosition;
+import f1.visualizer.wrappers.GPSCircuitPosition;
 import lombok.Data;
 
 import javax.swing.*;
+import javax.swing.text.DateFormatter;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.geom.*;
 import java.io.IOException;
+import java.text.*;
+import java.util.Date;
 import java.util.List;
 
 @Data
 public class DrawingPanel extends JPanel {
-    private List<Position> positions;
+    private List<GPSCircuitPosition> GPSCircuitPositions;
     private double scaleFactor; // Adjusted scaleFactor
     private boolean initialized = false; // Flag to check if initialization is done
     private Shape circuitShape;
     private boolean debug = true;
-    private List<DriverPosition> oneDriversPositions = DataFetcher.fetchDriverLocation(81);
+    private List<DriverArbitraryPosition> oneDriversPositions = DataFetcher.fetchDriverLocation(81);
     private int scale = 1;
     private int currentIndex = 0;
-    private int delay = 16; // Delay in milliseconds between each frame
+    private int delay = 1000; // Delay in milliseconds between each frame
     private Timer timer; // Total number of frames for the animation
-    private DriverPosition startDriverPosition; // Initial position of the driver for animation
-    private DriverPosition endDriverPosition; // Final position of the driver for animation
+    private DriverArbitraryPosition startDriverArbitraryPosition; // Initial position of the driver for animation
+    private DriverArbitraryPosition endDriverArbitraryPosition; // Final position of the driver for animation
 
 
     private Point screenCenter = new Point();
@@ -35,38 +38,38 @@ public class DrawingPanel extends JPanel {
     public DrawingPanel() {
         // Load positions from file
         try {
-            positions = CoordinateReader.readCoordinatesFromFile("C:\\Users\\jonci\\Desktop\\front\\F1 Visualizer Client\\src\\main\\java\\f1\\visualizer\\race_tracks\\sg-2008.json");
+            GPSCircuitPositions = CoordinateReader.readCoordinatesFromFile("C:\\Users\\jonci\\Desktop\\front\\F1 Visualizer Client\\src\\main\\java\\f1\\visualizer\\race_tracks\\sg-2008.json");
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
 
     private void fixPos(){
-        for (Position position : positions) {
-            int x = (int)(position.getX()*100000 - (double)((int)position.getX()*100000));
-            int y = (int)(position.getY()*100000 - (double)((int)position.getY()*100000));
-            position.setX(x);
-            position.setY(y);
+        for (GPSCircuitPosition GPSCircuitPosition : GPSCircuitPositions) {
+            int x = (int)(GPSCircuitPosition.getX()*100000 - (double)((int) GPSCircuitPosition.getX()*100000));
+            int y = (int)(GPSCircuitPosition.getY()*100000 - (double)((int) GPSCircuitPosition.getY()*100000));
+            GPSCircuitPosition.setX(x);
+            GPSCircuitPosition.setY(y);
         }
     }
 
     public void pushX(){
-        for (DriverPosition position : oneDriversPositions) {
+        for (DriverArbitraryPosition position : oneDriversPositions) {
             position.setX(position.getX()+10);
         }
     }
     public void pushY(){
-        for (DriverPosition position : oneDriversPositions) {
+        for (DriverArbitraryPosition position : oneDriversPositions) {
             position.setY(position.getY()+10);
         }
     }
     public void pullX(){
-        for (DriverPosition position : oneDriversPositions) {
+        for (DriverArbitraryPosition position : oneDriversPositions) {
             position.setX(position.getX()-10);
         }
     }
     public void pullY(){
-        for (DriverPosition position : oneDriversPositions) {
+        for (DriverArbitraryPosition position : oneDriversPositions) {
             position.setY(position.getY()-10);
         }
     }
@@ -80,7 +83,7 @@ public class DrawingPanel extends JPanel {
         double scaleX = circuitBounds.getWidth() / driversBounds.getWidth();
         double scaleY = circuitBounds.getHeight() / driversBounds.getHeight();
         double scaleFactor = Math.min(scaleX, scaleY);
-        for (DriverPosition position : oneDriversPositions) {
+        for (DriverArbitraryPosition position : oneDriversPositions) {
             double scaledX = circuitBounds.getX() + (position.getX() - driversBounds.getX()) * scaleFactor;
             double scaledY = circuitBounds.getY() + (position.getY() - driversBounds.getY()) * scaleFactor;
             position.setX((int) scaledX);
@@ -94,7 +97,7 @@ public class DrawingPanel extends JPanel {
         double maxX = Double.MIN_VALUE;
         double maxY = Double.MIN_VALUE;
 
-        for (DriverPosition position : oneDriversPositions) {
+        for (DriverArbitraryPosition position : oneDriversPositions) {
             minX = Math.min(minX, position.getX());
             minY = Math.min(minY, position.getY());
             maxX = Math.max(maxX, position.getX());
@@ -108,7 +111,7 @@ public class DrawingPanel extends JPanel {
         scaleDriverPositions();
         int totalX = 0;
         int totalY = 0;
-        for (DriverPosition position : oneDriversPositions) {
+        for (DriverArbitraryPosition position : oneDriversPositions) {
             totalX += position.getX();
             totalY += position.getY();
         }
@@ -116,7 +119,7 @@ public class DrawingPanel extends JPanel {
         int centerY = totalY / oneDriversPositions.size();
         int offsetX = (int) screenCenter.getX() - centerX;
         int offsetY = (int) screenCenter.getY() - centerY;
-        for (DriverPosition position : oneDriversPositions) {
+        for (DriverArbitraryPosition position : oneDriversPositions) {
             position.setX(position.getX() + offsetX+25);
             position.setY(position.getY() + offsetY+30);
         }
@@ -160,9 +163,9 @@ public class DrawingPanel extends JPanel {
     }
     private Shape createCircuit(){
         GeneralPath generalPath = new GeneralPath();
-        generalPath.moveTo(positions.get(0).getX(),positions.get(0).getY());
-        for (int i = 1; i < positions.size(); i++) {
-            generalPath.lineTo(positions.get(i).getX(), positions.get(i).getY());
+        generalPath.moveTo(GPSCircuitPositions.get(0).getX(), GPSCircuitPositions.get(0).getY());
+        for (int i = 1; i < GPSCircuitPositions.size(); i++) {
+            generalPath.lineTo(GPSCircuitPositions.get(i).getX(), GPSCircuitPositions.get(i).getY());
         }
         generalPath.closePath();
         return generalPath;
@@ -212,7 +215,7 @@ public class DrawingPanel extends JPanel {
     private void paintDriver(Graphics g) {
         Graphics2D g2d = (Graphics2D) g;
         g2d.setColor(Color.GREEN);
-        for (DriverPosition position : oneDriversPositions) {
+        for (DriverArbitraryPosition position : oneDriversPositions) {
             if (oneDriversPositions.indexOf(position) % 25 == 0) {
                 g2d.setStroke(new BasicStroke(5));
                 g2d.drawOval(position.getX()-5, position.getY()-5, 5, 5);
@@ -220,7 +223,7 @@ public class DrawingPanel extends JPanel {
         }
         int totalx = 0;
         int totaly = 0;
-        for (DriverPosition position : oneDriversPositions) {
+        for (DriverArbitraryPosition position : oneDriversPositions) {
             totalx+=position.getX();
             totaly+=position.getY();
         }
@@ -231,17 +234,38 @@ public class DrawingPanel extends JPanel {
     private void paintAnimation(Graphics g) {
         Graphics2D g2d = (Graphics2D) g;
         g2d.setColor(Color.blue);
+
         if (currentIndex < oneDriversPositions.size() - 1) {
-            DriverPosition start = oneDriversPositions.get(currentIndex);
-            DriverPosition end = oneDriversPositions.get(currentIndex + 5);
+            DriverArbitraryPosition start = oneDriversPositions.get(currentIndex);
+            DriverArbitraryPosition end = oneDriversPositions.get(currentIndex + 5);
+            Date startDate = stringToDate(start.getDate());
+            Date endDate = stringToDate(end.getDate());
+
+            long timeDifference = endDate.getTime() - startDate.getTime(); // Calculate time difference in milliseconds
+            delay = (int)timeDifference;
             int currentX = (int) (start.getX() + (end.getX() - start.getX()) * currentIndex / delay);
             int currentY = (int) (start.getY() + (end.getY() - start.getY()) * currentIndex / delay);
+
             g2d.setStroke(new BasicStroke(10));
             g2d.drawOval(currentX - 5, currentY - 5, 10, 10);
+
             currentIndex++;
         } else {
             stopAnimation();
         }
+    }
+
+
+    private Date stringToDate(String dateString) {
+        Date date = null;
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSS");
+        try {
+            date = formatter.parse(dateString);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        //2023-09-16T13:03:35.200
+        return date;
     }
 
     public void startAnimation() {

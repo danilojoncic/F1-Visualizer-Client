@@ -4,7 +4,7 @@ package f1.visualizer.wrappers;
 import lombok.Data;
 
 @Data
-public class DriverPosition{
+public class DriverArbitraryPosition {
     private int x;
     private int y;
     private int z;

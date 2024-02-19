@@ -5,7 +5,7 @@ import f1.visualizer.view.MainFrame;
 public class ControllManager {
     MainFrame mainFrame;
 
-    ScaleController scaleController;
+    //ScaleController scaleController;
     PlacementController placementController;
     MotionController motionController;
     //RotationController rotationController;
@@ -18,7 +18,7 @@ public class ControllManager {
     private void attachController(){
         debugController = new DebugController(mainFrame);
         placementController = new PlacementController(mainFrame);
-        scaleController = new ScaleController(mainFrame);
+        //scaleController = new ScaleController(mainFrame);
         //rotationController = new RotationController(mainFrame);
         motionController = new MotionController(mainFrame);
     }
