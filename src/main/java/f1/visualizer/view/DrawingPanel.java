@@ -31,13 +31,12 @@ public class DrawingPanel extends JPanel {
     private DriverArbitraryPosition startDriverArbitraryPosition; // Initial position of the driver for animation
     private DriverArbitraryPosition endDriverArbitraryPosition; // Final position of the driver for animation
 
-
     private Point screenCenter = new Point();
 
     public DrawingPanel() {
         // Load positions from file
         try {
-            GPSCircuitPositions = CoordinateReader.readCoordinatesFromFile("C:\\Users\\jonci\\Desktop\\front\\F1 Visualizer Client\\src\\main\\java\\f1\\visualizer\\race_tracks\\singapore.json");
+            GPSCircuitPositions = CoordinateReader.readCoordinatesFromFile("C:\\Users\\jonci\\Desktop\\front\\F1 Visualizer Client\\src\\main\\java\\f1\\visualizer\\race_tracks\\bahrain.json");
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -72,8 +71,6 @@ public class DrawingPanel extends JPanel {
             position.setY(position.getY()-10);
         }
     }
-
-
 
     private void scaleDriverPositions() {
         Rectangle2D circuitBounds = circuitShape.getBounds2D();
@@ -116,11 +113,11 @@ public class DrawingPanel extends JPanel {
         }
         int centerX = totalX / oneDriversPositions.size();
         int centerY = totalY / oneDriversPositions.size();
-        int offsetX = (int) screenCenter.getX() - centerX;
-        int offsetY = (int) screenCenter.getY() - centerY;
+        int offsetX = (int) (screenCenter.getX() - centerX);
+        int offsetY = (int) (screenCenter.getY() - centerY);
         for (DriverArbitraryPosition position : oneDriversPositions) {
-            position.setX(position.getX() + offsetX+25);
-            position.setY(position.getY() + offsetY+30);
+            position.setX((int) (position.getX() + offsetX + 25));
+            position.setY((int) (position.getY() + offsetY + 30));
         }
     }
 
@@ -148,10 +145,11 @@ public class DrawingPanel extends JPanel {
         setBackground(Color.WHITE);
         setUpDriverPos();
     }
-    private void transformCircuit(){
+
+    private void transformCircuit() {
         Rectangle bounds = circuitShape.getBounds();
-        double scaleX = (double) getWidth() / bounds.getWidth();
-        double scaleY = (double) getHeight() / bounds.getHeight();
+        double scaleX = ((double) getWidth() / bounds.getWidth()) * 0.9; // Scale factor reduced by 10%
+        double scaleY = ((double) getHeight() / bounds.getHeight()) * 0.9; // Scale factor reduced by 10%
         double scale = Math.min(scaleX, scaleY);
         double translateX = (getWidth() - scale * bounds.getWidth()) / 2 - scale * bounds.getX();
         double translateY = (getHeight() - scale * bounds.getHeight()) / 2 - scale * bounds.getY();
@@ -160,6 +158,7 @@ public class DrawingPanel extends JPanel {
         transform.scale(scale, scale);
         circuitShape = transform.createTransformedShape(circuitShape);
     }
+
     private Shape createCircuit(){
         GeneralPath generalPath = new GeneralPath();
         generalPath.moveTo(GPSCircuitPositions.get(0).getX(), GPSCircuitPositions.get(0).getY());
@@ -189,7 +188,6 @@ public class DrawingPanel extends JPanel {
         g2d.setStroke(trackStroke);
         g2d.draw(circuitShape);
     }
-
 
     private void paintGrid(Graphics graphics) {
         Graphics2D g2d = (Graphics2D) graphics;
@@ -286,4 +284,3 @@ public class DrawingPanel extends JPanel {
         }
     }
 }
-

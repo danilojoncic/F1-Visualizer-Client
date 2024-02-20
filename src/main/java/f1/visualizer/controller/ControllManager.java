@@ -10,12 +10,14 @@ public class ControllManager {
     MotionController motionController;
     //RotationController rotationController;
     DebugController debugController;
+    PanelSwitcherController panelSwitcherController;
     public ControllManager(MainFrame mainFrame) {
         this.mainFrame = mainFrame;
         attachController();
     }
 
     private void attachController(){
+        placementController = new PlacementController(mainFrame);
         debugController = new DebugController(mainFrame);
         placementController = new PlacementController(mainFrame);
         //scaleController = new ScaleController(mainFrame);

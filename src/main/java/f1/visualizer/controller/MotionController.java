@@ -15,7 +15,7 @@ public class MotionController {
 
 
     private void attachListner(){
-        mainFrame.getStartButton().addActionListener(new ActionListener() {
+        mainFrame.getDebugPanel().getStartButton().addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 mainFrame.getDrawingPanel().startAnimation();
@@ -24,7 +24,7 @@ public class MotionController {
             }
         });
 
-        mainFrame.getPauseButton().addActionListener(new ActionListener() {
+        mainFrame.getDebugPanel().getPauseButton().addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 mainFrame.getDrawingPanel().startAnimation();

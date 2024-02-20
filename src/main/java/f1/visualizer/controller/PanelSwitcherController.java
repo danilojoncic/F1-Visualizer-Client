@@ -5,19 +5,21 @@ import f1.visualizer.view.MainFrame;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class DebugController {
+public class PanelSwitcherController {
     private MainFrame mainFrame;
 
-    public DebugController(MainFrame mainFrame) {
+    public PanelSwitcherController(MainFrame mainFrame) {
         this.mainFrame = mainFrame;
         attachListners();
     }
 
     private void attachListners(){
-        mainFrame.getDebugPanel().getDebug().addActionListener(new ActionListener() {
+        mainFrame.getMenuPanel().getWatchRaceReplayButton().addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                mainFrame.getDrawingPanel().setDebug(!mainFrame.getDrawingPanel().isDebug());
+                mainFrame.remove(mainFrame.getMenuPanel());
+                mainFrame.add(mainFrame.getDrawingPanel());
+                mainFrame.add(mainFrame.getDebugPanel());
                 mainFrame.repaint();
                 mainFrame.revalidate();
             }

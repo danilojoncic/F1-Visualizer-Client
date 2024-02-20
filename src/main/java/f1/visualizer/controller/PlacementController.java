@@ -14,7 +14,7 @@ public class PlacementController {
     }
 
     private void attachListner(){
-        mainFrame.getPullXOffsetButton().addActionListener(new ActionListener() {
+        mainFrame.getDebugPanel().getPullXOffsetButton().addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 mainFrame.getDrawingPanel().pullX();
@@ -23,7 +23,7 @@ public class PlacementController {
             }
         });
 
-        mainFrame.getPullYOffsetButton().addActionListener(new ActionListener() {
+        mainFrame.getDebugPanel().getPullYOffsetButton().addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 mainFrame.getDrawingPanel().pullY();
@@ -32,7 +32,7 @@ public class PlacementController {
             }
         });
 
-        mainFrame.getPushXOffsetButton().addActionListener(new ActionListener() {
+        mainFrame.getDebugPanel().getPushXOffsetButton().addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 mainFrame.getDrawingPanel().pushX();
@@ -41,7 +41,7 @@ public class PlacementController {
             }
         });
 
-        mainFrame.getPushYOffsetButton().addActionListener(new ActionListener() {
+        mainFrame.getDebugPanel().getPushYOffsetButton().addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 mainFrame.getDrawingPanel().pushY();
