@@ -8,7 +8,7 @@ public class ControllManager {
     //ScaleController scaleController;
     PlacementController placementController;
     MotionController motionController;
-    //RotationController rotationController;
+    RotationController rotationController;
     DebugController debugController;
     PanelSwitcherController panelSwitcherController;
     public ControllManager(MainFrame mainFrame) {
@@ -21,7 +21,7 @@ public class ControllManager {
         debugController = new DebugController(mainFrame);
         placementController = new PlacementController(mainFrame);
         //scaleController = new ScaleController(mainFrame);
-        //rotationController = new RotationController(mainFrame);
+        rotationController = new RotationController(mainFrame);
         motionController = new MotionController(mainFrame);
     }
 

@@ -1,6 +1,7 @@
 package f1.visualizer.view;
 
 import f1.visualizer.controller.CoordinateReader;
+import f1.visualizer.utils.Converter;
 import f1.visualizer.utils.DataFetcher;
 import f1.visualizer.wrappers.DriverArbitraryPosition;
 import f1.visualizer.wrappers.GPSCircuitPosition;
@@ -23,14 +24,15 @@ public class DrawingPanel extends JPanel {
     private boolean initialized = false; // Flag to check if initialization is done
     private Shape circuitShape;
     private boolean debug = true;
+    private double rotationAngle = 0;
     private List<DriverArbitraryPosition> oneDriversPositions = DataFetcher.fetchDriverLocation(81);
     private int scale = 1;
     private int currentIndex = 0;
-    private int delay = 1000; // Delay in milliseconds between each frame
+    private int delay = 200; // Delay in milliseconds between each frame
     private Timer timer; // Total number of frames for the animation
     private DriverArbitraryPosition startDriverArbitraryPosition; // Initial position of the driver for animation
     private DriverArbitraryPosition endDriverArbitraryPosition; // Final position of the driver for animation
-
+    private boolean animationInProgress = false;
     private Point screenCenter = new Point();
 
     public DrawingPanel() {
@@ -50,28 +52,6 @@ public class DrawingPanel extends JPanel {
             GPSCircuitPosition.setY(y);
         }
     }
-
-    public void pushX(){
-        for (DriverArbitraryPosition position : oneDriversPositions) {
-            position.setX(position.getX()+10);
-        }
-    }
-    public void pushY(){
-        for (DriverArbitraryPosition position : oneDriversPositions) {
-            position.setY(position.getY()+10);
-        }
-    }
-    public void pullX(){
-        for (DriverArbitraryPosition position : oneDriversPositions) {
-            position.setX(position.getX()-10);
-        }
-    }
-    public void pullY(){
-        for (DriverArbitraryPosition position : oneDriversPositions) {
-            position.setY(position.getY()-10);
-        }
-    }
-
     private void scaleDriverPositions() {
         Rectangle2D circuitBounds = circuitShape.getBounds2D();
         Rectangle2D driversBounds = getDriversBoundingBox();
@@ -132,7 +112,9 @@ public class DrawingPanel extends JPanel {
         if(debug){
             paintGrid(g);
         }
-        paintAnimation(g);
+        if(animationInProgress){
+            paintAnimation(g);
+        }
     }
 
     private void initialize() {
@@ -155,6 +137,7 @@ public class DrawingPanel extends JPanel {
         double translateY = (getHeight() - scale * bounds.getHeight()) / 2 - scale * bounds.getY();
         AffineTransform transform = new AffineTransform();
         transform.translate(translateX, translateY);
+        transform.rotate(Math.toRadians(rotationAngle), screenCenter.getX(), screenCenter.getY()); // Rotate around screen center
         transform.scale(scale, scale);
         circuitShape = transform.createTransformedShape(circuitShape);
     }
@@ -172,6 +155,8 @@ public class DrawingPanel extends JPanel {
     private void paintCircuit(Graphics g) {
         Graphics2D g2d = (Graphics2D) g;
         g2d.setColor(Color.RED);
+        AffineTransform oldTransform = g2d.getTransform(); // Save the original transform
+        g2d.rotate(Math.toRadians(rotationAngle), screenCenter.getX(), screenCenter.getY());
         Stroke outsideStroke = new BasicStroke(
                 27, // Adjust the width of the outside line
                 BasicStroke.CAP_BUTT,
@@ -181,8 +166,6 @@ public class DrawingPanel extends JPanel {
                 0); // Adjust the dash phase if necessary
         g2d.setStroke(outsideStroke);
         g2d.draw(circuitShape);
-
-        // Set the track color and draw it
         g2d.setColor(Color.BLACK);
         Stroke trackStroke = new BasicStroke(22); // Adjust the width of the track line
         g2d.setStroke(trackStroke);
@@ -212,6 +195,8 @@ public class DrawingPanel extends JPanel {
     private void paintDriver(Graphics g) {
         Graphics2D g2d = (Graphics2D) g;
         g2d.setColor(Color.GREEN);
+        AffineTransform oldTransform = g2d.getTransform(); // Save the original transform
+        g2d.rotate(Math.toRadians(rotationAngle), screenCenter.getX(), screenCenter.getY()); // Rotate around screen center
         for (DriverArbitraryPosition position : oneDriversPositions) {
             if (oneDriversPositions.indexOf(position) % 25 == 0) {
                 g2d.setStroke(new BasicStroke(5));
@@ -226,21 +211,21 @@ public class DrawingPanel extends JPanel {
         }
         g2d.setColor(Color.RED);
         g2d.drawOval(totalx/oneDriversPositions.size()-5,totaly/oneDriversPositions.size()-5,5,5);
+        g2d.setTransform(oldTransform); // Restore the original transform
     }
 
     private void paintAnimation(Graphics g) {
         Graphics2D g2d = (Graphics2D) g;
         g2d.setColor(Color.blue);
-
         if (currentIndex < oneDriversPositions.size() - 1) {
             DriverArbitraryPosition start = oneDriversPositions.get(currentIndex);
-            DriverArbitraryPosition end = oneDriversPositions.get(currentIndex + 5);
-            Date startDate = stringToDate(start.getDate());
-            Date endDate = stringToDate(end.getDate());
+            DriverArbitraryPosition end = oneDriversPositions.get(currentIndex +1);
+            Date startDate = Converter.stringToDate(start.getDate());
+            Date endDate = Converter.stringToDate(end.getDate());
 
             long timeDifference = endDate.getTime() - startDate.getTime();
             //need to scale time somehow, i need Dr Manns Planet
-            delay = (int)timeDifference;
+            delay = (int)timeDifference*100000;
             int currentX = (int) (start.getX() + (end.getX() - start.getX()) * currentIndex / delay);
             int currentY = (int) (start.getY() + (end.getY() - start.getY()) * currentIndex / delay);
 
@@ -253,20 +238,8 @@ public class DrawingPanel extends JPanel {
         }
     }
 
-
-    private Date stringToDate(String dateString) {
-        Date date = null;
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSS");
-        try {
-            date = formatter.parse(dateString);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        //2023-09-16T13:03:35.200
-        return date;
-    }
-
     public void startAnimation() {
+        animationInProgress = true;
         ActionListener taskPerformer = new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -281,6 +254,26 @@ public class DrawingPanel extends JPanel {
     public void stopAnimation() {
         if (timer != null && timer.isRunning()) {
             timer.stop();
+        }
+    }
+    public void pushX(){
+        for (DriverArbitraryPosition position : oneDriversPositions) {
+            position.setX(position.getX()+10);
+        }
+    }
+    public void pushY(){
+        for (DriverArbitraryPosition position : oneDriversPositions) {
+            position.setY(position.getY()+10);
+        }
+    }
+    public void pullX(){
+        for (DriverArbitraryPosition position : oneDriversPositions) {
+            position.setX(position.getX()-10);
+        }
+    }
+    public void pullY(){
+        for (DriverArbitraryPosition position : oneDriversPositions) {
+            position.setY(position.getY()-10);
         }
     }
 }
