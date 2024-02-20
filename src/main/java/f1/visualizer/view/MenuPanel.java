@@ -1,9 +1,12 @@
 package f1.visualizer.view;
 
+import f1.visualizer.response_objects.Meetings;
+import f1.visualizer.utils.DataFetcher;
 import lombok.Data;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.List;
 
 @Data
 public class MenuPanel extends JPanel {
@@ -27,7 +30,6 @@ public class MenuPanel extends JPanel {
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.gridx = 0;
         gbc.gridy = 0;
-        gbc.gridwidth = 1;
         gbc.gridheight = 1;
         gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.weightx = 1.0;
@@ -47,10 +49,27 @@ public class MenuPanel extends JPanel {
         addComponent(confirmOriginButton, gbc);
         addComponent(resetButton, gbc);
         addComponent(exitButton, gbc);
+        initRaceSelection();
+        initOriginSelection();
     }
 
     private void addComponent(Component component, GridBagConstraints gbc) {
         gbc.gridy++;
         add(component, gbc);
+    }
+
+
+    private void initRaceSelection(){
+        List<Meetings> allWeekends = DataFetcher.fetchAllMeetings();
+        for(Meetings meetings: allWeekends){
+            if(meetings.getMeeting_name().contains("Testing"))continue;
+            raceSelectionRace.addItem(meetings.getMeeting_name());
+        }
+    }
+
+
+    private void initOriginSelection(){
+        chooseOriginComboBox.addItem("http://localhost:8000");
+        chooseOriginComboBox.addItem("https://api.openf1.org/v1/");
     }
 }

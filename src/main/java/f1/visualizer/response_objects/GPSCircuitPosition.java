@@ -1,4 +1,4 @@
-package f1.visualizer.wrappers;
+package f1.visualizer.response_objects;
 
 import lombok.Data;
 

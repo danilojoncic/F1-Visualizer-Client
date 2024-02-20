@@ -3,8 +3,8 @@ package f1.visualizer.view;
 import f1.visualizer.controller.CoordinateReader;
 import f1.visualizer.utils.Converter;
 import f1.visualizer.utils.DataFetcher;
-import f1.visualizer.wrappers.DriverArbitraryPosition;
-import f1.visualizer.wrappers.GPSCircuitPosition;
+import f1.visualizer.response_objects.DriverArbitraryPosition;
+import f1.visualizer.response_objects.GPSCircuitPosition;
 import lombok.Data;
 
 import javax.swing.*;
@@ -13,7 +13,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.geom.*;
 import java.io.IOException;
-import java.text.*;
 import java.util.Date;
 import java.util.List;
 

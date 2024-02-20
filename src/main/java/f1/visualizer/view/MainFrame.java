@@ -24,12 +24,12 @@ public class MainFrame extends JFrame {
         setSize(Toolkit.getDefaultToolkit().getScreenSize());
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
-        //menuPanel = new MenuPanel();
-        //this.add(menuPanel);
-        drawingPanel = new DrawingPanel();
-        getContentPane().add(drawingPanel);
-        debugPanel = new DebugPanel();
-        getContentPane().add(debugPanel, BorderLayout.SOUTH);
-        controllManager = new ControllManager(this);
+        menuPanel = new MenuPanel();
+        this.add(menuPanel);
+        //drawingPanel = new DrawingPanel();
+        //getContentPane().add(drawingPanel);
+        //debugPanel = new DebugPanel();
+        //getContentPane().add(debugPanel, BorderLayout.SOUTH);
+        //controllManager = new ControllManager(this);
     }
 }

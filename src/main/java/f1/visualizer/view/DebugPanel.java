@@ -16,8 +16,9 @@ public class DebugPanel extends JPanel {
     JButton debug = new JButton("Debug");
     JButton startButton = new JButton("Play");
     JButton pauseButton = new JButton("Pause");
-     JButton rotatePlus;
-     JButton rotateMinus;
+    JButton rotatePlus;
+    JButton rotateMinus;
+    JButton backToMenuButton = new JButton("Go back");
 
     public DebugPanel() {
         this.setLayout(new GridLayout(4,4));
@@ -28,10 +29,8 @@ public class DebugPanel extends JPanel {
     private void init(){
         rotatePlus = new JButton("Rotate +");
         rotateMinus = new JButton("Rotate -");
-        this.add(increaseScaleButton);
         this.add(pushYOffsetButton);
         this.add(pushXOffsetButton);
-        this.add(decreaseScaleButton);
         this.add(pullYOffsetButton);
         this.add(pullXOffsetButton);
         this.add(rotatePlus);
@@ -39,5 +38,6 @@ public class DebugPanel extends JPanel {
         this.add(debug);
         this.add(startButton);
         this.add(pauseButton);
+        this.add(backToMenuButton);
     }
 }

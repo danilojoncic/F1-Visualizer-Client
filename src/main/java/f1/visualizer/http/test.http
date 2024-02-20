@@ -15,5 +15,5 @@ GET https://api.openf1.org/v1/meetings
 Accept: application/json
 
 ###
-GET https://api.openf1.org/v1/sessions
+GET https://api.openf1.org/v1/latest
 Accept: application/json
