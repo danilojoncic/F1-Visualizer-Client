@@ -25,11 +25,9 @@ public class MainFrame extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         menuPanel = new MenuPanel();
+        drawingPanel = new DrawingPanel("Bahrain_Grand_Prix");
+        debugPanel = new DebugPanel();
         this.add(menuPanel);
-        //drawingPanel = new DrawingPanel();
-        //getContentPane().add(drawingPanel);
-        //debugPanel = new DebugPanel();
-        //getContentPane().add(debugPanel, BorderLayout.SOUTH);
-        //controllManager = new ControllManager(this);
+        controllManager = new ControllManager(this);
     }
 }

@@ -78,7 +78,7 @@ public class DataFetcher {
     public static List<Sessions> fetchSessionByKey(int meeting_key) {
         List<Sessions> sessions = new ArrayList<>();
         try {
-            String apiUrl = "https://api.openf1.org/v1/sessions?session_type=Race&meeting_key="+meeting_key+"";
+            String apiUrl = "https://api.openf1.org/v1/sessions?session_name=Race&meeting_key="+meeting_key+"";
             URL url = new URL(apiUrl);
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setRequestMethod("GET");

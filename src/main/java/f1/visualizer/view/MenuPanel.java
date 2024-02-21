@@ -65,6 +65,8 @@ public class MenuPanel extends JPanel {
             if(meetings.getMeeting_name().contains("Testing"))continue;
             raceSelectionRace.addItem(meetings.getMeeting_name());
         }
+        //need to hardcode, missing in Open F1 api
+        raceSelectionRace.addItem("Austrian Grand Prix");
     }
 
 

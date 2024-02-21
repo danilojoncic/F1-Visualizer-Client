@@ -17,3 +17,7 @@ Accept: application/json
 ###
 GET https://api.openf1.org/v1/latest
 Accept: application/json
+
+###
+GET https://api.openf1.org/v1/sessions?year=2023&session_type=Race
+Accept: application/json

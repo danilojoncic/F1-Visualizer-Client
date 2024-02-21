@@ -34,10 +34,10 @@ public class DrawingPanel extends JPanel {
     private boolean animationInProgress = false;
     private Point screenCenter = new Point();
 
-    public DrawingPanel() {
+    public DrawingPanel(String circuit) {
         // Load positions from file
         try {
-            GPSCircuitPositions = CoordinateReader.readCoordinatesFromFile("C:\\Users\\jonci\\Desktop\\front\\F1 Visualizer Client\\src\\main\\java\\f1\\visualizer\\race_tracks\\bahrain.json");
+            GPSCircuitPositions = CoordinateReader.readCoordinatesFromFile("C:\\Users\\jonci\\Desktop\\front\\F1 Visualizer Client\\src\\main\\java\\f1\\visualizer\\race_tracks\\"+circuit+".json");
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
