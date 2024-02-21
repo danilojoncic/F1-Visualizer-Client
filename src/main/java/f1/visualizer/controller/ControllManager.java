@@ -5,6 +5,7 @@ import f1.visualizer.view.MainFrame;
 public class ControllManager {
     MainFrame mainFrame;
 
+    ChangeSourceController changeSourceController;
     ExitController exitController;
     PlacementController placementController;
     MotionController motionController;
@@ -17,6 +18,7 @@ public class ControllManager {
         attachController();
     }
     private void attachController(){
+        changeSourceController = new ChangeSourceController(mainFrame);
         backController = new BackController(mainFrame);
         panelSwitcherController = new PanelSwitcherController(mainFrame);
         exitController = new ExitController(mainFrame);
