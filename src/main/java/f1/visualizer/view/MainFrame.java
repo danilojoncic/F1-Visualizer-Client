@@ -20,7 +20,7 @@ public class MainFrame extends JFrame {
 
 
     private void init(){
-        setTitle("F1 Visualizer 0.0.3");
+        setTitle("App");
         setSize(Toolkit.getDefaultToolkit().getScreenSize());
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);

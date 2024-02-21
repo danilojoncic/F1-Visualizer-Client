@@ -10,7 +10,7 @@ import java.util.List;
 
 @Data
 public class MenuPanel extends JPanel {
-    private JLabel title = new JLabel("F1 Visualizer 0.0.3");
+    private JLabel title = new JLabel("F1 Visualizer 0.0.4");
     private JButton liveTimingButton = new JButton("Live Data");
     private JButton watchRaceReplayButton = new JButton("Race Replay");
     private JButton exitButton = new JButton("Exit");
