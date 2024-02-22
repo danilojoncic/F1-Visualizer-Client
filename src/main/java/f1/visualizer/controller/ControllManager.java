@@ -1,5 +1,13 @@
 package f1.visualizer.controller;
 
+import f1.visualizer.controller.debug.DebugController;
+import f1.visualizer.controller.debug.MotionController;
+import f1.visualizer.controller.debug.PlacementController;
+import f1.visualizer.controller.debug.RotationController;
+import f1.visualizer.controller.menu.BackController;
+import f1.visualizer.controller.menu.ChangeSourceController;
+import f1.visualizer.controller.menu.ExitController;
+import f1.visualizer.controller.menu.PanelSwitcherController;
 import f1.visualizer.view.MainFrame;
 
 public class ControllManager {

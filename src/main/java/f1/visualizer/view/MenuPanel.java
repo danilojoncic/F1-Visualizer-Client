@@ -1,6 +1,6 @@
 package f1.visualizer.view;
 
-import f1.visualizer.response_objects.Meetings;
+import f1.visualizer.response_model.Meetings;
 import f1.visualizer.utils.DataFetcher;
 import lombok.Data;
 

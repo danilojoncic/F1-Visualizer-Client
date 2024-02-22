@@ -1,10 +1,10 @@
 package f1.visualizer.view;
 
-import f1.visualizer.controller.CoordinateReader;
+import f1.visualizer.utils.CoordinateReader;
 import f1.visualizer.utils.Converter;
 import f1.visualizer.utils.DataFetcher;
-import f1.visualizer.response_objects.DriverArbitraryPosition;
-import f1.visualizer.response_objects.GPSCircuitPosition;
+import f1.visualizer.response_model.DriverArbitraryPosition;
+import f1.visualizer.response_model.GPSCircuitPosition;
 import lombok.Data;
 
 import javax.swing.*;

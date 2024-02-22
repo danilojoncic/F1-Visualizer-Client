@@ -1,4 +1,7 @@
 package f1.visualizer.view;
 
-public class LivePanel {
+import javax.swing.*;
+
+public class LivePanel extends JPanel {
+
 }

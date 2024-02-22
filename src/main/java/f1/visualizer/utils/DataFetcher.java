@@ -3,9 +3,9 @@ package f1.visualizer.utils;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import f1.visualizer.response_objects.DriverArbitraryPosition;
-import f1.visualizer.response_objects.Meetings;
-import f1.visualizer.response_objects.Sessions;
+import f1.visualizer.response_model.DriverArbitraryPosition;
+import f1.visualizer.response_model.Meetings;
+import f1.visualizer.response_model.Sessions;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;

@@ -1,4 +1,4 @@
-package f1.visualizer.controller;
+package f1.visualizer.controller.menu;
 
 public class RaceSelectionController {
 }

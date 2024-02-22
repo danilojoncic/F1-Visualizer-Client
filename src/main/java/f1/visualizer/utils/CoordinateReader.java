@@ -1,7 +1,7 @@
-package f1.visualizer.controller;
+package f1.visualizer.utils;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import f1.visualizer.response_objects.GPSCircuitPosition;
+import f1.visualizer.response_model.GPSCircuitPosition;
 import lombok.Data;
 
 import java.io.File;

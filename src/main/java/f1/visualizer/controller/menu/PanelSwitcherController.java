@@ -1,4 +1,4 @@
-package f1.visualizer.controller;
+package f1.visualizer.controller.menu;
 
 import f1.visualizer.view.DrawingPanel;
 import f1.visualizer.view.MainFrame;
