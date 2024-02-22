@@ -46,7 +46,9 @@ public class DataFetcher {
     public static List<DriverArbitraryPosition> fetchDriverLocation(int driver_number){
         List<DriverArbitraryPosition> positions = new ArrayList<>();
         try {
-            String apiUrl = "https://api.openf1.org/v1/location?session_key=9161&driver_number=" + driver_number + "&date>2023-09-16T13:03:35.200&date<2023-09-16T13:08:35.800";
+            //hardcoding for now
+            //Carlos Sainz one full lap
+            String apiUrl = "https://api.openf1.org/v1/location?session_key=9165&driver_number=55&date<2023-09-17T12:07:11.656000&date>2023-09-17T12:05:30.313000";
             URL url = new URL(apiUrl);
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setRequestMethod("GET");

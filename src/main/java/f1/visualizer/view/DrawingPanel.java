@@ -24,9 +24,9 @@ public class DrawingPanel extends JPanel {
     private Shape circuitShape;
     private boolean debug = true;
     private double rotationAngle = 0;
-    private List<DriverArbitraryPosition> oneDriversPositions = DataFetcher.fetchDriverLocation(81);
+    private List<DriverArbitraryPosition> oneDriversPositions = DataFetcher.fetchDriverLocation(1);
     private int scale = 1;
-    private int currentIndex = 0;
+    private int currentIndex = 1;
     private int delay = 200; // Delay in milliseconds between each frame
     private Timer timer; // Total number of frames for the animation
     private DriverArbitraryPosition startDriverArbitraryPosition; // Initial position of the driver for animation
@@ -40,6 +40,21 @@ public class DrawingPanel extends JPanel {
             GPSCircuitPositions = CoordinateReader.readCoordinatesFromFile("C:\\Users\\jonci\\Desktop\\front\\F1 Visualizer Client\\src\\main\\java\\f1\\visualizer\\race_tracks\\"+circuit+".json");
         } catch (IOException e) {
             throw new RuntimeException(e);
+        }
+    }
+    @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        if (!initialized) {
+            initialize();
+        }
+        paintCircuit(g);
+        paintDriver(g);
+        if(debug){
+            paintGrid(g);
+        }
+        if(animationInProgress){
+            paintAnimation(g);
         }
     }
 
@@ -97,22 +112,6 @@ public class DrawingPanel extends JPanel {
         for (DriverArbitraryPosition position : oneDriversPositions) {
             position.setX((int) (position.getX() + offsetX + 25));
             position.setY((int) (position.getY() + offsetY + 30));
-        }
-    }
-
-    @Override
-    protected void paintComponent(Graphics g) {
-        super.paintComponent(g);
-        if (!initialized) {
-            initialize();
-        }
-        paintCircuit(g);
-        paintDriver(g);
-        if(debug){
-            paintGrid(g);
-        }
-        if(animationInProgress){
-            paintAnimation(g);
         }
     }
 
@@ -197,7 +196,7 @@ public class DrawingPanel extends JPanel {
         AffineTransform oldTransform = g2d.getTransform(); // Save the original transform
         g2d.rotate(Math.toRadians(rotationAngle), screenCenter.getX(), screenCenter.getY()); // Rotate around screen center
         for (DriverArbitraryPosition position : oneDriversPositions) {
-            if (oneDriversPositions.indexOf(position) % 25 == 0) {
+            if (true) {
                 g2d.setStroke(new BasicStroke(5));
                 g2d.drawOval(position.getX()-5, position.getY()-5, 5, 5);
             }
@@ -212,30 +211,61 @@ public class DrawingPanel extends JPanel {
         g2d.drawOval(totalx/oneDriversPositions.size()-5,totaly/oneDriversPositions.size()-5,5,5);
         g2d.setTransform(oldTransform); // Restore the original transform
     }
-
     private void paintAnimation(Graphics g) {
         Graphics2D g2d = (Graphics2D) g;
         g2d.setColor(Color.blue);
-        if (currentIndex < oneDriversPositions.size() - 1) {
-            DriverArbitraryPosition start = oneDriversPositions.get(currentIndex);
-            DriverArbitraryPosition end = oneDriversPositions.get(currentIndex +1);
-            Date startDate = Converter.stringToDate(start.getDate());
-            Date endDate = Converter.stringToDate(end.getDate());
 
-            long timeDifference = endDate.getTime() - startDate.getTime();
-            //need to scale time somehow, i need Dr Manns Planet
-            delay = (int)timeDifference*100000;
-            int currentX = (int) (start.getX() + (end.getX() - start.getX()) * currentIndex / delay);
-            int currentY = (int) (start.getY() + (end.getY() - start.getY()) * currentIndex / delay);
+        // Calculate the total duration of animation in milliseconds
+        long totalAnimationDuration = 103000L;
 
-            g2d.setStroke(new BasicStroke(10));
-            g2d.drawOval(currentX - 5, currentY - 5, 10, 10);
+        // Calculate the total number of frames for the animation
+        int totalFrames = oneDriversPositions.size() - 2;
 
-            currentIndex++;
-        } else {
-            stopAnimation();
-        }
+        // Calculate the duration of each frame
+        long frameDuration = totalAnimationDuration / totalFrames;
+
+        // Get the current time
+        long currentTime = System.currentTimeMillis();
+
+        // Calculate the current frame index
+        int currentFrameIndex = (int) (currentTime / frameDuration);
+
+        // Ensure currentFrameIndex stays within bounds
+        currentFrameIndex = Math.min(currentFrameIndex, totalFrames);
+
+        // Get the start and end positions for the current frame
+        DriverArbitraryPosition start = oneDriversPositions.get(currentFrameIndex);
+        DriverArbitraryPosition end = oneDriversPositions.get(currentFrameIndex + 1);
+
+        // Calculate the progress within the current frame
+        long frameStartTime = currentFrameIndex * frameDuration;
+        long elapsedTimeInFrame = currentTime - frameStartTime;
+        double progress = (double) elapsedTimeInFrame / frameDuration;
+
+        // Calculate the interpolated position based on progress
+        int currentX = (int) (start.getX() + (end.getX() - start.getX()) * progress);
+        int currentY = (int) (start.getY() + (end.getY() - start.getY()) * progress);
+
+        // Draw the driver position
+        g2d.setStroke(new BasicStroke(10));
+        g2d.drawOval(currentX - 5, currentY - 5, 10, 10);
+
+        // Schedule a repaint at 60 fps
+        long nextFrameTime = (currentFrameIndex + 1) * frameDuration;
+        long timeUntilNextFrame = nextFrameTime - currentTime;
+        long delayUntilNextFrame = Math.max(0, 1000 / 60 - timeUntilNextFrame);
+        Timer repaintTimer = new Timer((int) delayUntilNextFrame, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                repaint();
+            }
+        });
+        repaintTimer.setRepeats(false);
+        repaintTimer.start();
     }
+
+
+
 
     public void startAnimation() {
         animationInProgress = true;
@@ -255,24 +285,14 @@ public class DrawingPanel extends JPanel {
             timer.stop();
         }
     }
-    public void pushX(){
+    public void pushX(int value){
         for (DriverArbitraryPosition position : oneDriversPositions) {
-            position.setX(position.getX()+10);
+            position.setX(position.getX()+value);
         }
     }
-    public void pushY(){
+    public void pushY(int value) {
         for (DriverArbitraryPosition position : oneDriversPositions) {
-            position.setY(position.getY()+10);
-        }
-    }
-    public void pullX(){
-        for (DriverArbitraryPosition position : oneDriversPositions) {
-            position.setX(position.getX()-10);
-        }
-    }
-    public void pullY(){
-        for (DriverArbitraryPosition position : oneDriversPositions) {
-            position.setY(position.getY()-10);
+            position.setY(position.getY() + value);
         }
     }
 }

@@ -16,28 +16,38 @@ public class DebugPanel extends JPanel {
     JButton debug = new JButton("Debug");
     JButton startButton = new JButton("Play");
     JButton pauseButton = new JButton("Pause");
-    JButton rotatePlus;
-    JButton rotateMinus;
+    JButton rotatePlus = new JButton("Rotate +");;
+    JButton rotateMinus = new JButton("Rotate -");;
     JButton backToMenuButton = new JButton("Go back");
+    JSlider xSlider = new JSlider(SwingConstants.HORIZONTAL,-100,100,0);
+    JSlider ySlider = new JSlider(SwingConstants.HORIZONTAL,-100,100,0);
+    JSlider rotationSlider = new JSlider(SwingConstants.HORIZONTAL,0,360,0);
 
     public DebugPanel() {
-        this.setLayout(new GridLayout(4,4));
+        this.setLayout(new GridLayout(5,4));
         init();
     }
 
 
     private void init(){
-        rotatePlus = new JButton("Rotate +");
-        rotateMinus = new JButton("Rotate -");
-        this.add(pushYOffsetButton);
-        this.add(pushXOffsetButton);
-        this.add(pullYOffsetButton);
-        this.add(pullXOffsetButton);
-        this.add(rotatePlus);
-        this.add(rotateMinus);
+        xSlider.setMajorTickSpacing(10);
+        xSlider.setPaintTicks(true);
+        xSlider.setPaintLabels(true);
+
+
+        ySlider.setMajorTickSpacing(10);
+        ySlider.setPaintTicks(true);
+        ySlider.setPaintLabels(true);
+
+        rotationSlider.setMajorTickSpacing(60);
+        rotationSlider.setPaintTicks(true);
+        rotationSlider.setPaintLabels(true);
         this.add(debug);
         this.add(startButton);
         this.add(pauseButton);
         this.add(backToMenuButton);
+        this.add(xSlider);
+        this.add(ySlider);
+        this.add(rotationSlider);
     }
 }
