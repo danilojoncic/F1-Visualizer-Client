@@ -295,4 +295,5 @@ public class DrawingPanel extends JPanel {
             position.setY(position.getY() + value);
         }
     }
+
 }

@@ -2,6 +2,8 @@ package f1.visualizer.controller.debug;
 
 import f1.visualizer.view.MainFrame;
 
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -13,21 +15,11 @@ public class RotationController {
         attachListners();
     }
 
-    private void attachListners(){
-        mainFrame.getDebugPanel().getRotatePlus().addActionListener(new ActionListener() {
+    private void attachListners() {
+        mainFrame.getDebugPanel().getRotationSlider().addChangeListener(new ChangeListener() {
             @Override
-            public void actionPerformed(ActionEvent e) {
-                mainFrame.getDrawingPanel().setRotationAngle(mainFrame.getDrawingPanel().getRotationAngle() + Math.toRadians(50));
-                mainFrame.repaint();
-                mainFrame.revalidate();
-            }
-        });
-
-
-        mainFrame.getDebugPanel().getRotateMinus().addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                mainFrame.getDrawingPanel().setRotationAngle(mainFrame.getDrawingPanel().getRotationAngle() - Math.toRadians(50));
+            public void stateChanged(ChangeEvent e) {
+                mainFrame.getDrawingPanel().setRotationAngle(mainFrame.getDebugPanel().getRotationSlider().getValue());
                 mainFrame.repaint();
                 mainFrame.revalidate();
             }

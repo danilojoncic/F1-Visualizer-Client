@@ -38,6 +38,7 @@ public class DebugPanel extends JPanel {
         ySlider.setMajorTickSpacing(10);
         ySlider.setPaintTicks(true);
         ySlider.setPaintLabels(true);
+        ySlider.setValueIsAdjusting(true);
 
         rotationSlider.setMajorTickSpacing(60);
         rotationSlider.setPaintTicks(true);
