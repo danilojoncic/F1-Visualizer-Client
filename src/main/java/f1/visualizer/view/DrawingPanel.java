@@ -35,6 +35,8 @@ public class DrawingPanel extends JPanel {
     private boolean animationInProgress = false;
     private Point screenCenter = new Point();
     private PositionalPanel positionalPanel = new PositionalPanel();
+    private boolean animation = false;
+    private int currIndex = 0;
 
     public DrawingPanel(String circuit) {
         extracted();
@@ -60,9 +62,52 @@ public class DrawingPanel extends JPanel {
         positionalPanel.setVisible(debug);
         if(debug){
             paintGrid(g);
-
+        }
+        if(animation){
+            animate();
         }
     }
+
+    private void animate() {
+        // Check if animation reached the end
+        if (currIndex + 1 >= oneDriversPositions.size()) {
+            animation = false;
+            return;
+        }
+        DriverArbitraryPosition currentPos = oneDriversPositions.get(currIndex);
+        DriverArbitraryPosition nextPos = oneDriversPositions.get(currIndex + 1);
+        long aMili = Converter.stringToDate(currentPos.getDate()).getTime();
+        long bMili = Converter.stringToDate(nextPos.getDate()).getTime();
+        long timeDiff = bMili - aMili;
+        int currentX = (int) (currentPos.getX() + (nextPos.getX() - currentPos.getX()) * timeDiff*10000);
+        int currentY = (int) (currentPos.getY() + (nextPos.getY() - currentPos.getY()) * timeDiff*10000);
+
+        Graphics2D g2d = (Graphics2D) getGraphics();
+        g2d.setColor(Color.BLUE);
+        g2d.fillOval(currentX - 5, currentY - 5, 10, 10);
+
+        g2d.setColor(Color.RED);
+        g2d.fillOval(nextPos.getX() - 5, nextPos.getY() - 5, 10, 10);
+
+        int frameTime = 1000 / 60;
+        int timeUntilNextFrame = Math.max(0, frameTime);
+        Timer timer = new Timer(timeUntilNextFrame, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                animate();
+            }
+        });
+        timer.setRepeats(false);
+        timer.start();
+        currIndex++;
+    }
+
+
+
+
+
+
+
 
     private void fixPos(){
         for (GPSCircuitPosition GPSCircuitPosition : GPSCircuitPositions) {
@@ -116,8 +161,8 @@ public class DrawingPanel extends JPanel {
         int offsetX = (int) (screenCenter.getX() - centerX);
         int offsetY = (int) (screenCenter.getY() - centerY);
         for (DriverArbitraryPosition position : oneDriversPositions) {
-            position.setX((int) (position.getX() + offsetX + 25));
-            position.setY((int) (position.getY() + offsetY + 30));
+            position.setX((int) (position.getX() + offsetX));
+            position.setY((int) (position.getY() + offsetY));
         }
     }
 
