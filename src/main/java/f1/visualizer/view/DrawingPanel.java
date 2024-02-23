@@ -1,5 +1,6 @@
 package f1.visualizer.view;
 
+import f1.visualizer.controller.debug.PlacementController;
 import f1.visualizer.utils.CoordinateReader;
 import f1.visualizer.utils.Converter;
 import f1.visualizer.utils.DataFetcher;
@@ -33,15 +34,21 @@ public class DrawingPanel extends JPanel {
     private DriverArbitraryPosition endDriverArbitraryPosition; // Final position of the driver for animation
     private boolean animationInProgress = false;
     private Point screenCenter = new Point();
+    private PositionalPanel positionalPanel = new PositionalPanel();
 
     public DrawingPanel(String circuit) {
-        // Load positions from file
+        extracted();
         try {
             GPSCircuitPositions = CoordinateReader.readCoordinatesFromFile("C:\\Users\\jonci\\Desktop\\front\\F1 Visualizer Client\\src\\main\\java\\f1\\visualizer\\race_tracks\\"+circuit+".json");
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
+
+    private void extracted() {
+        add(positionalPanel, BorderLayout.NORTH);
+    }
+
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
@@ -50,11 +57,10 @@ public class DrawingPanel extends JPanel {
         }
         paintCircuit(g);
         paintDriver(g);
+        positionalPanel.setVisible(debug);
         if(debug){
             paintGrid(g);
-        }
-        if(animationInProgress){
-            paintAnimation(g);
+
         }
     }
 
@@ -118,7 +124,7 @@ public class DrawingPanel extends JPanel {
     private void initialize() {
         screenCenter.x = getWidth() / 2;
         screenCenter.y = getHeight() / 2;
-        initialized = true; // Mark initialization as done
+        initialized = true;
         fixPos();
         circuitShape = createCircuit();
         transformCircuit();
@@ -196,7 +202,7 @@ public class DrawingPanel extends JPanel {
         AffineTransform oldTransform = g2d.getTransform(); // Save the original transform
         g2d.rotate(Math.toRadians(rotationAngle), screenCenter.getX(), screenCenter.getY()); // Rotate around screen center
         for (DriverArbitraryPosition position : oneDriversPositions) {
-            if (true) {
+            if (debug) {
                 g2d.setStroke(new BasicStroke(5));
                 g2d.drawOval(position.getX()-5, position.getY()-5, 5, 5);
             }
@@ -211,89 +217,10 @@ public class DrawingPanel extends JPanel {
         g2d.drawOval(totalx/oneDriversPositions.size()-5,totaly/oneDriversPositions.size()-5,5,5);
         g2d.setTransform(oldTransform); // Restore the original transform
     }
-    private void paintAnimation(Graphics g) {
-        Graphics2D g2d = (Graphics2D) g;
-        g2d.setColor(Color.blue);
-
-        // Calculate the total duration of animation in milliseconds
-        long totalAnimationDuration = 103000L;
-
-        // Calculate the total number of frames for the animation
-        int totalFrames = oneDriversPositions.size() - 2;
-
-        // Calculate the duration of each frame
-        long frameDuration = totalAnimationDuration / totalFrames;
-
-        // Get the current time
-        long currentTime = System.currentTimeMillis();
-
-        // Calculate the current frame index
-        int currentFrameIndex = (int) (currentTime / frameDuration);
-
-        // Ensure currentFrameIndex stays within bounds
-        currentFrameIndex = Math.min(currentFrameIndex, totalFrames);
-
-        // Get the start and end positions for the current frame
-        DriverArbitraryPosition start = oneDriversPositions.get(currentFrameIndex);
-        DriverArbitraryPosition end = oneDriversPositions.get(currentFrameIndex + 1);
-
-        // Calculate the progress within the current frame
-        long frameStartTime = currentFrameIndex * frameDuration;
-        long elapsedTimeInFrame = currentTime - frameStartTime;
-        double progress = (double) elapsedTimeInFrame / frameDuration;
-
-        // Calculate the interpolated position based on progress
-        int currentX = (int) (start.getX() + (end.getX() - start.getX()) * progress);
-        int currentY = (int) (start.getY() + (end.getY() - start.getY()) * progress);
-
-        // Draw the driver position
-        g2d.setStroke(new BasicStroke(10));
-        g2d.drawOval(currentX - 5, currentY - 5, 10, 10);
-
-        // Schedule a repaint at 60 fps
-        long nextFrameTime = (currentFrameIndex + 1) * frameDuration;
-        long timeUntilNextFrame = nextFrameTime - currentTime;
-        long delayUntilNextFrame = Math.max(0, 1000 / 60 - timeUntilNextFrame);
-        Timer repaintTimer = new Timer((int) delayUntilNextFrame, new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                repaint();
-            }
-        });
-        repaintTimer.setRepeats(false);
-        repaintTimer.start();
-    }
-
-
-
-
-    public void startAnimation() {
-        animationInProgress = true;
-        ActionListener taskPerformer = new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                repaint();
-                currentIndex++;
-            }
-        };
-        timer = new Timer(delay, taskPerformer);
-        timer.start();
-    }
-
-    public void stopAnimation() {
-        if (timer != null && timer.isRunning()) {
-            timer.stop();
-        }
-    }
-    public void pushX(int value){
+    public void changeCordinates(int x,int y){
         for (DriverArbitraryPosition position : oneDriversPositions) {
-            position.setX(position.getX()+value);
+            position.setX(position.getX()+x);
+            position.setY(position.getY()+y);
         }
     }
-    public void pushY(int value) {
-        for (DriverArbitraryPosition position : oneDriversPositions) {
-            position.setY(position.getY() + value);
-        }
-    }
-
 }

@@ -1,6 +1,7 @@
 package f1.visualizer.view;
 
 import f1.visualizer.controller.ControllManager;
+import f1.visualizer.controller.debug.PlacementController;
 import lombok.Data;
 
 import javax.swing.*;
@@ -29,5 +30,6 @@ public class MainFrame extends JFrame {
         debugPanel = new DebugPanel();
         this.add(menuPanel);
         controllManager = new ControllManager(this);
+        PlacementController placementController = new PlacementController(this);
     }
 }

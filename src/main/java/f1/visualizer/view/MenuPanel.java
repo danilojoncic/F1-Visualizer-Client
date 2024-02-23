@@ -112,7 +112,7 @@ public class MenuPanel extends JPanel {
 
 
     private void initOriginSelection(){
-        chooseOriginComboBox.addItem("http://localhost:8000");
-        chooseOriginComboBox.addItem("https://api.openf1.org/v1/");
+        chooseOriginComboBox.addItem("https://api.openf1.org/v1");
+        chooseOriginComboBox.addItem("Custom");
     }
 }

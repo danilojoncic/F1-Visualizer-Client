@@ -3,6 +3,7 @@ package f1.visualizer.controller.menu;
 import f1.visualizer.utils.Constants;
 import f1.visualizer.view.MainFrame;
 
+import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;

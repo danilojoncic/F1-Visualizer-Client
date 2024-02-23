@@ -1,9 +1,9 @@
 package f1.visualizer.controller.debug;
 
+import f1.visualizer.response_model.DriverArbitraryPosition;
 import f1.visualizer.view.MainFrame;
 
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
+import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -12,29 +12,42 @@ public class PlacementController {
 
     public PlacementController(MainFrame mainFrame) {
         this.mainFrame = mainFrame;
-        attachListner();
+        attachListener();
     }
 
-    private void attachListner(){
-        mainFrame.getDebugPanel().getXSlider().addChangeListener(new ChangeListener() {
+    private void attachListener() {
+        mainFrame.getDrawingPanel().getPositionalPanel().getBtnUp().addActionListener(new ActionListener() {
             @Override
-            public void stateChanged(ChangeEvent e) {
-                System.out.println("Changed x");
-
-                mainFrame.getDrawingPanel().pushX(mainFrame.getDebugPanel().getXSlider().getValue());
-                mainFrame.repaint();
-                mainFrame.revalidate();
+            public void actionPerformed(ActionEvent e) {
+                moveDrivers(0, -5);
+            }
+        });
+        mainFrame.getDrawingPanel().getPositionalPanel().getBtnDown().addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                moveDrivers(0, 5);
             }
         });
 
-        mainFrame.getDebugPanel().getYSlider().addChangeListener(new ChangeListener() {
+        mainFrame.getDrawingPanel().getPositionalPanel().getBtnLeft().addActionListener(new ActionListener() {
             @Override
-            public void stateChanged(ChangeEvent e) {
-                System.out.println("Changed y");
-                mainFrame.getDrawingPanel().pushY(mainFrame.getDebugPanel().getYSlider().getValue());
-                mainFrame.repaint();
-                mainFrame.revalidate();
+            public void actionPerformed(ActionEvent e) {
+                moveDrivers(-5, 0);
             }
         });
+
+        mainFrame.getDrawingPanel().getPositionalPanel().getBtnRight().addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                moveDrivers(5, 0);
+            }
+        });
+    }
+
+    private void moveDrivers(int deltaX, int deltaY) {
+        System.out.println("TRIGGERED");
+        mainFrame.getDrawingPanel().changeCordinates(deltaX,deltaY);
+        mainFrame.getDrawingPanel().repaint();
+        mainFrame.getDrawingPanel().revalidate();
     }
 }

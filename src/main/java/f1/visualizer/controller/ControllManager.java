@@ -1,7 +1,6 @@
 package f1.visualizer.controller;
 
 import f1.visualizer.controller.debug.DebugController;
-import f1.visualizer.controller.debug.MotionController;
 import f1.visualizer.controller.debug.PlacementController;
 import f1.visualizer.controller.debug.RotationController;
 import f1.visualizer.controller.menu.BackController;
@@ -16,7 +15,6 @@ public class ControllManager {
     ChangeSourceController changeSourceController;
     ExitController exitController;
     PlacementController placementController;
-    MotionController motionController;
     RotationController rotationController;
     DebugController debugController;
     BackController backController;
@@ -32,8 +30,6 @@ public class ControllManager {
         exitController = new ExitController(mainFrame);
         placementController = new PlacementController(mainFrame);
         debugController = new DebugController(mainFrame);
-        placementController = new PlacementController(mainFrame);
         rotationController = new RotationController(mainFrame);
-        motionController = new MotionController(mainFrame);
     }
 }

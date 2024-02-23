@@ -17,7 +17,6 @@ public class ExitController {
         mainFrame.getMenuPanel().getExitButton().addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                System.out.println("PRESSED EXIT");
                 System.exit(0);
             }
         });
